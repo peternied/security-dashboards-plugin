@@ -14,7 +14,7 @@ jobs:
           rm -f opensearch-*.tar.gz
           
       - name: Download OpenSearch Security Plugin
-        run: wget -O opensearch-security.zip https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/2.0.0/latest/linux/x64/builds/opensearch/plugins/opensearch-security-2.0.0.0.zip
+        run: wget -O opensearch-security.zip https://d27291j40lwlmn.cloudfront.net/opensearch-security-2.0.0.0-SNAPSHOT.zip
         
 
       - name: Run OpenSearch with plugin
