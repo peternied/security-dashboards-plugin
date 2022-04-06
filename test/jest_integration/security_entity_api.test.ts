@@ -184,15 +184,13 @@ describe('start OpenSearch Dashboards server', () => {
   it('create/update action groups', async () => {
     const actionGroupName = `test_action_group_${Date.now()}`;
 
-    const createActionGroupResponse = await createOrUpdateEntityAsAdmin(
-      root,
-      'actiongroups',
-      actionGroupName,
-      {
-        description: 'action group description',
-        allowed_actions: ['indices:data/read*'],
-      }
-    );
+    const createActionGroupResponse = await osdTestServer.request
+    .post(root, `/api/v1/configuration/${actionGroupName}`)
+    .set(AUTHORIZATION_HEADER_NAME, ADMIN_CREDENTIALS)
+    .send({
+      description: 'action group description',
+      allowed_actions: ['indices:data/read*'],
+    });
 
     console.log(
       `*** createActionGroupResponse body:***\n\n${JSON.stringify(
