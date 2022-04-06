@@ -38,7 +38,7 @@ jobs:
           WORKDIR /opensearch/
           ENTRYPOINT /docker-host/os-ep.sh
           EOF
-          docker run -d -p 9200:9200 -p 9600:9600 -i opensearch-test:latest
+          docker run --name ops -d -p 9200:9200 -p 9600:9600 -i opensearch-test:latest
 
       - name: Checkout OpenSearch Dashboard
         uses: actions/checkout@v2
@@ -106,3 +106,7 @@ jobs:
           curl -XGET https://localhost:9200 -u 'admin:admin' -k
           cd ./OpenSearch-Dashboards/plugins/security-dashboards-plugin
           yarn test:jest_server --coverage
+
+      - name: Get Docker Logs
+        if: always()
+        run: docker logs ops
