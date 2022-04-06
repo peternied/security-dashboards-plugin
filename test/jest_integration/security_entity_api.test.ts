@@ -193,6 +193,14 @@ describe('start OpenSearch Dashboards server', () => {
         allowed_actions: ['indices:data/read*'],
       }
     );
+
+    console.log(
+      `*** createActionGroupResponse body:***\n\n${JSON.stringify(
+        createActionGroupResponse.body,
+        undefined,
+        3
+      )}`
+    );
     expect(createActionGroupResponse.status).toEqual(200);
 
     const getCreatedActionGroupResponse = await getEntityAsAdmin(

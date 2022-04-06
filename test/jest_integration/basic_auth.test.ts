@@ -197,6 +197,13 @@ describe('start OpenSearch Dashboards server', () => {
     const response = await osdTestServer.request
       .get(root, '/auth/anonymous')
       .unset(AUTHORIZATION_HEADER_NAME);
+    console.log(
+      `*** response body:***\n\n${JSON.stringify(
+        response.body,
+        undefined,
+        3
+      )}`
+    );
     expect(response.status).toEqual(302);
   });
 
