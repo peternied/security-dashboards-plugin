@@ -25,6 +25,9 @@ import {
 import wreck from '@hapi/wreck';
 import { Builder, By, until, ThenableWebDriver } from 'selenium-webdriver';
 
+import { initWebDriver } from '../../../../test/functional/services/remote/webdriver'
+
+const { runServer } = require('saml-idp');
 
 describe('start OpenSearch Dashboards server', () => {
   let root: Root;
@@ -32,6 +35,12 @@ describe('start OpenSearch Dashboards server', () => {
   let config;
 
   beforeAll(async () => {
+    // Create certificate pair on the fly and pass it to runServer
+    runServer({
+      acsUrl: 'http://localhost:5601/_opendistro/_security/saml/acs',
+      audience: 'https://localhost:9200',
+    });
+
     root = osdTestServer.createRootWithSettings(
       {
         plugins: {
@@ -75,7 +84,9 @@ describe('start OpenSearch Dashboards server', () => {
     await root.start();
 
     console.log('Starting the Selenium Web Driver');
-    driver = new Builder().forBrowser('firefox').build();
+    // initWebDriver()
+
+    driver = new Builder().forBrowser('firefox').setFirefoxOptions({addArguments: '--headless'}).build();
 
     await wreck.patch(
       'https://localhost:9200/_plugins/_security/api/rolesmapping/all_access',
@@ -219,7 +230,7 @@ describe('start OpenSearch Dashboards server', () => {
   // 1 Integ Test for Log into Dashboard with Hash
   // 1 Integ Test for logging into dev console
   // 1 Integ Test to test Cookie expiry
-  it.only('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
+  it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
     await driver.get('http://localhost:5601/app/opensearch_dashboards_overview#/');
     await driver.findElement(By.id('btn-sign-in')).click();
 
@@ -256,4 +267,3 @@ describe('start OpenSearch Dashboards server', () => {
   });
 
 });
-}
