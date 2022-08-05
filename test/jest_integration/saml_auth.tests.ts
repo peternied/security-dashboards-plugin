@@ -140,22 +140,18 @@ describe('start OpenSearch Dashboards server', () => {
         config: {},
       },
     };
-    try {
-      config.dynamic!.authc!.saml_auth_domain = saml_config;
-      await wreck.put(
-        'https://localhost:9200/_plugins/_security/api/securityconfig/config',
-        {
-          payload: config,
-          rejectUnauthorized: false,
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: ADMIN_CREDENTIALS,
-          },
-        }
-      );
-    } catch (error) {
-      console.log('Got an error!!');
-    }
+    config.dynamic!.authc!.saml_auth_domain = saml_config;
+    await wreck.put(
+      'https://localhost:9200/_plugins/_security/api/securityconfig/config',
+      {
+        payload: config,
+        rejectUnauthorized: false,
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: ADMIN_CREDENTIALS,
+        },
+      }
+    );
     console.log('The Config Response is : ' + JSON.stringify(config));
   });
 
@@ -214,11 +210,6 @@ describe('start OpenSearch Dashboards server', () => {
      }).catch(value => {
        Promise.resolve(value);
      });
-     //   .then(value => {
-     //
-     // }).catch(reason => {
-     //
-     // });
     // shutdown OpenSearchDashboards server
     await root.shutdown();
     await driver.quit();
@@ -228,13 +219,9 @@ describe('start OpenSearch Dashboards server', () => {
   // 1 Integ Test for Log into Dashboard with Hash
   // 1 Integ Test for logging into dev console
   // 1 Integ Test to test Cookie expiry
-  it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
+  it.only('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
     await driver.get('http://localhost:5601/app/opensearch_dashboards_overview#/');
     await driver.findElement(By.id('btn-sign-in')).click();
-    // await driver.wait(until.urlContains('/app/home'));
-    // await driver.wait(until.titleIs('Home - OpenSearch Dashboards'));
-    // let currUrl = await driver.getCurrentUrl();
-    // console.log(currUrl);
 
     await driver
       .wait(
@@ -269,10 +256,4 @@ describe('start OpenSearch Dashboards server', () => {
   });
 
 });
-
-function sleepFor(sleepDuration: number) {
-  let now = new Date().getTime();
-  while (new Date().getTime() < now + sleepDuration) {
-    /* Do nothing */
-  }
 }
