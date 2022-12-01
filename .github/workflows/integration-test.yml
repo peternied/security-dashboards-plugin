@@ -22,11 +22,7 @@ jobs:
       - run: firefox --version
           
       - name: Download OpenSearch Security Plugin
-        run: wget -O opensearch-security.zip https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/3.0.0/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-security-3.0.0.0.zip
-
-      - run: mkdir -p ./build/distributions
-      - run: mv opensearch-security.zip ./build/distributions/opensearch-security-3.0.0.zip
-      - run: pwd || ls || ls ./build/distributions
+        run: wget --progress=bar:force:noscroll -O opensearch-security.zip https://ci.opensearch.org/ci/dbc/distribution-build-opensearch/3.0.0/latest/linux/x64/tar/builds/opensearch/plugins/opensearch-security-3.0.0.0.zip
 
       - name: Create Setup Script
         run: |
@@ -35,10 +31,11 @@ jobs:
           /bin/bash -c "yes | ./opensearch-${{ env.OPENSEARCH_VERSION }}-SNAPSHOT/plugins/${{ env.PLUGIN_NAME }}/tools/install_demo_configuration.sh"
           EOF
 
-      - run: pwd || ls
+      - run: pwd
+      - run: ls
 
       - name: Run Opensearch with A Single Plugin
-        uses: opensearch-project/security/.github/actions/start-opensearch-with-one-plugin@main
+        uses: peternied/security/.github/actions/start-opensearch-with-one-plugin@action-tweaks
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
           plugin-name: ${{ env.PLUGIN_NAME }}
